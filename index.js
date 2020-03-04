@@ -6,5 +6,5 @@ app.listen(PORT);
 
 app.get('/', (req, res) => {
   console.log(req);
-  res.send({ hi: 'there' });
+  res.send({ hi: 'there', bye: 'buddy' });
 });
