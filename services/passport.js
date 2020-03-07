@@ -1,0 +1,52 @@
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const keys = require('../config/keys');
+const mongoose = require('mongoose');
+
+const User = mongoose.model('users');
+
+// save to database
+passport.serializeUser((user, done) => {
+  console.log(user);
+  done(null, user.id);
+});
+
+// query user from database
+passport.deserializeUser((id, done) => {
+  User.findById(id).then(user => {
+    done(null, user);
+  });
+});
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: keys.googleClientID,
+      clientSecret: keys.googleClientSecret,
+      callbackURL: '/auth/google/callback'
+    },
+    (accessToken, refreshToken, profile, done) => {
+      User.findOne({ googleId: profile.id })
+        .then(existingUser => {
+          if (existingUser) {
+            done(null, existingUser);
+          } else {
+            new User({
+              googleId: profile.id
+            })
+              .save()
+              .then(user => done(null, user))
+              .catch(error => {
+                console.log('failed creating new user');
+                done(error);
+              });
+          }
+        })
+        .catch(error => {
+          console.log('crashed searching for user');
+          console.error(error);
+          done(error);
+        });
+    }
+  )
+);
