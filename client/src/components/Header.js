@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Payments from './Payments';
 
 class Header extends Component {
   state = {
@@ -11,15 +12,28 @@ class Header extends Component {
       this.setState({ auth: this.props.auth });
     }
   }
-  renderBrandLink() {}
   renderLogButton() {
     switch (this.state.auth) {
       case null:
         return;
       case false:
-        return <a href='/auth/google'>Login With Google</a>;
+        return (
+          <li>
+            <a href='/auth/google'>Login With Google</a>
+          </li>
+        );
       default:
-        return <a href='/api/logout'>Log out</a>;
+        return [
+          <li key={1}>
+            <Payments />
+          </li>,
+          <li key={2} style={{ margin: '0 10px' }}>
+            Credits: {this.props.auth.credits || 0}
+          </li>,
+          <li key={3}>
+            <a href='/api/logout'>Log out</a>
+          </li>
+        ];
     }
   }
   render() {
@@ -30,7 +44,7 @@ class Header extends Component {
             Emaily
           </Link>
           <ul id='nav-mobile' className='right'>
-            <li>{this.renderLogButton()}</li>
+            {this.renderLogButton()}
           </ul>
         </div>
       </nav>
