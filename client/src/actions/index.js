@@ -11,3 +11,10 @@ export const handleToken = token => async dispatch => {
   // assumes credit balance is in the USER
   dispatch({ type: FETCH_USER, payload: res.data });
 };
+
+export const submitSurvey = (values, history) => async dispatch => {
+  const res = await axios.post('/api/surveys', values);
+
+  history.push('/surveys');
+  dispatch({ type: FETCH_USER, payload: res.data });
+};

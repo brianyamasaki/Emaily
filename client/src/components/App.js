@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import Header from './Header';
 import { fetchUser } from '../actions';
 import Landing from './Landing';
+import Dashboard from './Dashboard';
+import SurveyNew from './surveys/SurveyNew';
 
 class App extends Component {
   componentDidMount() {
@@ -14,10 +16,11 @@ class App extends Component {
     return (
       <div className='container'>
         <BrowserRouter>
-          <div>
+          <div className='container'>
             <Header />
             <Route exact path='/' component={Landing} />
-            <Route exact path='/surveys' component={() => <h1>Surveys</h1>} />
+            <Route exact path='/surveys' component={Dashboard} />
+            <Route exact path='/surveys/new' component={SurveyNew} />
           </div>
         </BrowserRouter>
       </div>
